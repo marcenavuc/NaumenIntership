@@ -3,10 +3,12 @@ import java.util.Objects;
 public class Cell {
     public int x;
     public int y;
+    public Cell parent;
 
-    public Cell(int x, int y) {
+    public Cell(int x, int y, Cell parent) {
         this.x = x;
         this.y = y;
+        this.parent = parent;
     }
 
     @Override
