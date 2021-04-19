@@ -1,24 +1,29 @@
 import java.util.*;
 
-public class ExitFinder implements RouteFinder {
-    private final ArrayDeque<Cell> deque;
+public class BreadthFirstFinder implements RouteFinder {
+    private PriorityQueue<Cell> deque;
     private HashSet<Cell> visited;
+    private EuclideanComparator comparator;
+    private static int[][] directions = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
 
-    public ExitFinder() {
-        deque = new ArrayDeque<>();
-        visited = new HashSet<>();
+    public BreadthFirstFinder() {
+        visited = new HashSet<Cell>();
     }
 
     /**
      * Поиск кратчайшего маршрута между двумя точками
-     *
+     * с помощью bfs с очередью приориететов
      * @param map карта
      * @return карта с простроенным маршрутом
      */
     @Override
     public char[][] findRoute(char[][] map) {
-        visited = new HashSet<>(map.length * map[0].length);
-        Cell robotPosition = findRobot(map);
+        Cell robotPosition = findChar(map, '@');
+        Cell endPosition = findChar(map, 'X');
+
+        comparator = new EuclideanComparator(endPosition);
+        deque = new PriorityQueue<Cell>(comparator);
+        visited = new HashSet<Cell>(map.length * map[0].length);
 
         if (robotPosition == null)
             return null;
@@ -37,17 +42,17 @@ public class ExitFinder implements RouteFinder {
      */
     private Cell breadthFirstSearch(char[][] map){
         while (deque.size() > 0) {
-            Cell point = deque.pop();
+            Cell point = deque.poll();
             ArrayList<Cell> neighbours = findNeighbours(map, point);
 
             for (Cell neighbour: neighbours) {
                 if (!visited.contains(neighbour)) {
+                    neighbour.setParent(point);
                     deque.add(neighbour);
-                    neighbour.parent = point;
                     visited.add(neighbour);
                 }
 
-                if (map[neighbour.x][neighbour.y] == 'X')
+                if (map[neighbour.getX()][neighbour.getY()] == 'X')
                     return neighbour;
             }
         }
@@ -61,10 +66,10 @@ public class ExitFinder implements RouteFinder {
      * @return карта с  путем
      */
     private char[][] restorePath(char[][] map, Cell endCell) {
-        Cell parent = endCell.parent;
-        while (parent != null && parent.parent != null) {
-            map[parent.x][parent.y] = '+';
-            parent = parent.parent;
+        Cell parent = endCell.getParent();
+        while (parent != null && parent.getParent() != null) {
+            map[parent.getX()][parent.getY()] = '+';
+            parent = parent.getParent();
         }
         return map;
     }
@@ -72,31 +77,40 @@ public class ExitFinder implements RouteFinder {
     /**
      * Поиск ближайших соседей для клетки
      * @param map карта
-     * @param point клетка
+     * @param cell клетка
      * @return соседи для point
      */
-    private ArrayList<Cell> findNeighbours(char[][] map, Cell point) {
-        ArrayList<Cell> result = new ArrayList<>();
-        if (point.x + 1 < map.length && map[point.x + 1][point.y] != '#')
-            result.add(new Cell(point.x + 1, point.y, point));
-        if (point.x - 1 >= 0 && map[point.x - 1][point.y] != '#')
-            result.add(new Cell(point.x - 1, point.y, point));
-        if (point.y + 1 < map[0].length && map[point.x][point.y + 1] != '#')
-            result.add(new Cell(point.x, point.y + 1, point));
-        if (point.y - 1 >= 0 && map[point.x][point.y - 1] != '#')
-            result.add(new Cell(point.x, point.y - 1, point));
+    private ArrayList<Cell> findNeighbours(char[][] map, Cell cell) {
+        ArrayList<Cell> result = new ArrayList<Cell>();
+        for (int[] dir : directions) {
+            int x = cell.getX() + dir[0];
+            int y = cell.getY() + dir[1];
+
+            if (!isOutOfMap(x, y, map) && !isWall(x, y, map))
+                result.add(new Cell(x, y, cell));
+        }
         return result;
     }
 
+    private boolean isWall(int x, int y, char[][] map)
+    {
+        return map[x][y] == '#';
+    }
+
+    private boolean isOutOfMap(int x, int y, char[][] map)
+    {
+        return (x < 0 || x >= map.length || y < 0 || y >= map[0].length);
+    }
+
     /**
-     * Поиск робота на карте
+     * Поиск определенного символа на карте
      * @param map карта
-     * @return позиция робота
+     * @return позиция символа
      */
-    private Cell findRobot(char[][] map) {
+    private Cell findChar(char[][] map, char letter) {
         for(int i=0; i < map.length; i++)
         for(int j=0; j < map[0].length; j++)
-        if (map[i][j] == '@')
+        if (map[i][j] == letter)
             return new Cell(i, j, null);
         return null;
     }

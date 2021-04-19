@@ -1,14 +1,38 @@
 import java.util.Objects;
 
 public class Cell {
-    public int x;
-    public int y;
-    public Cell parent;
+    private int x;
+    private int y;
+    private Cell parent;
 
     public Cell(int x, int y, Cell parent) {
         this.x = x;
         this.y = y;
         this.parent = parent;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public void setParent(Cell parent) {
+        this.parent = parent;
+    }
+
+    public Cell getParent() {
+        return parent;
     }
 
     @Override

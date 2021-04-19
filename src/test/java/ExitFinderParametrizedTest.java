@@ -22,7 +22,7 @@ public class ExitFinderParametrizedTest {
 
     @Before
     public void setUp() {
-        routeFinder = new ExitFinder();
+        routeFinder = new BreadthFirstFinder();
     }
 
     @Parameterized.Parameters
