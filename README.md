@@ -20,5 +20,5 @@ between two cells
 * **RouteFinder** - interface Finder
 
 **tests/**  - tests
-* **ExitFinderParametrizedTest** - simple parametrized test for algorithm
+* **RouteFinderParametrizedTest** - simple parametrized test for algorithm
 * **LoadTest** - load test for algorithm with maze 10000 x 10000

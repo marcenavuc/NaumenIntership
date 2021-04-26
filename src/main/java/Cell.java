@@ -4,7 +4,7 @@ public class Cell {
     private int x;
     private int y;
     private Cell parent;
-
+    
     public Cell(int x, int y, Cell parent) {
         this.x = x;
         this.y = y;

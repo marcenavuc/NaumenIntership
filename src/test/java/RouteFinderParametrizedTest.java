@@ -10,12 +10,12 @@ import java.util.Arrays;
 import java.util.Collection;
 
 @RunWith(Parameterized.class)
-public class ExitFinderParametrizedTest {
+public class RouteFinderParametrizedTest {
     char[][] map;
     char[][] expected;
     RouteFinder routeFinder;
 
-    public ExitFinderParametrizedTest(char[][] map, char[][] expected) {
+    public RouteFinderParametrizedTest(char[][] map, char[][] expected) {
         this.map = map;
         this.expected = expected;
     }
@@ -31,17 +31,17 @@ public class ExitFinderParametrizedTest {
                 {
                     new char[][] {
                             "...@.".toCharArray(),
-                            ".##.#".toCharArray(),
-                            ".....".toCharArray(),
                             ".####".toCharArray(),
+                            ".....".toCharArray(),
+                            "####.".toCharArray(),
                             ".X...".toCharArray(),
                     },
                     new char[][] {
-                            "...@.".toCharArray(),
-                            ".##+#".toCharArray(),
-                            "++++.".toCharArray(),
+                            "+++@.".toCharArray(),
                             "+####".toCharArray(),
-                            "+X...".toCharArray(),
+                            "+++++".toCharArray(),
+                            "####+".toCharArray(),
+                            ".X+++".toCharArray(),
                     }
                 },
                 {
@@ -53,6 +53,22 @@ public class ExitFinderParametrizedTest {
                             ".X...".toCharArray(),
                     },
                     null
+                },
+                {
+                    new char[][] {
+                            "...@..".toCharArray(),
+                            ".####.".toCharArray(),
+                            "......".toCharArray(),
+                            "####..".toCharArray(),
+                            ".X....".toCharArray(),
+                    },
+                    new char[][] {
+                            "...@++".toCharArray(),
+                            ".####+".toCharArray(),
+                            ".....+".toCharArray(),
+                            "####.+".toCharArray(),
+                            ".X++++".toCharArray(),
+                    }
                 },
         });
     }

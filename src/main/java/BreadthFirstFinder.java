@@ -1,13 +1,12 @@
 import java.util.*;
 
 public class BreadthFirstFinder implements RouteFinder {
-    private PriorityQueue<Cell> deque;
+    private ArrayDeque<Cell> deque;
     private HashSet<Cell> visited;
-    private EuclideanComparator comparator;
-    private static int[][] directions = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
+    private static final int[][] directions = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
 
     public BreadthFirstFinder() {
-        visited = new HashSet<Cell>();
+        visited = new HashSet<>();
     }
 
     /**
@@ -19,11 +18,9 @@ public class BreadthFirstFinder implements RouteFinder {
     @Override
     public char[][] findRoute(char[][] map) {
         Cell robotPosition = findChar(map, '@');
-        Cell endPosition = findChar(map, 'X');
 
-        comparator = new EuclideanComparator(endPosition);
-        deque = new PriorityQueue<Cell>(comparator);
-        visited = new HashSet<Cell>(map.length * map[0].length);
+        deque = new ArrayDeque<>();
+        visited = new HashSet<>(map.length * map[0].length);
 
         if (robotPosition == null)
             return null;
@@ -42,7 +39,7 @@ public class BreadthFirstFinder implements RouteFinder {
      */
     private Cell breadthFirstSearch(char[][] map){
         while (deque.size() > 0) {
-            Cell point = deque.poll();
+            Cell point = deque.pop();
             ArrayList<Cell> neighbours = findNeighbours(map, point);
 
             for (Cell neighbour: neighbours) {
@@ -81,7 +78,7 @@ public class BreadthFirstFinder implements RouteFinder {
      * @return соседи для point
      */
     private ArrayList<Cell> findNeighbours(char[][] map, Cell cell) {
-        ArrayList<Cell> result = new ArrayList<Cell>();
+        ArrayList<Cell> result = new ArrayList<>();
         for (int[] dir : directions) {
             int x = cell.getX() + dir[0];
             int y = cell.getY() + dir[1];
